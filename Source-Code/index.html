@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Connect - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css"> 
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Applying consistent font for professionalism */
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-cyan-600 min-h-screen flex items-center justify-center">
+
+    <div class="w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-extrabold text-white">Campus Connect</h1>
+            <p class="text-indigo-200 mt-2">Centralized Academic Portal (BCC351 Mini Project)</p>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-2xl p-8">
+            
+            <div class="flex border-b border-gray-200 mb-6 rounded-t-lg overflow-hidden">
+                <button id="student-btn" class="flex-1 py-3 text-center font-semibold text-white bg-indigo-600 transition duration-300">
+                    Student
+                </button>
+                <button id="faculty-btn" class="flex-1 py-3 text-center font-semibold text-gray-700 bg-gray-100 transition duration-300 hover:bg-gray-200 border-l border-gray-200">
+                    Faculty
+                </button>
+                <button disabled class="flex-1 py-3 text-center font-semibold text-gray-400 bg-gray-100 border-l border-gray-200 cursor-not-allowed">
+                    Admin
+                </button>
+            </div>
+
+            <form id="login-form">
+                </form>
+            
+            <p class="text-center text-xs text-gray-500 mt-6">
+                *Frontend Mock: Click "Log In" to proceed to the respective portal.
+            </p>
+            
+        </div>
+    </div>
+
+    <script>
+        // Core logic for dynamic login form and client-side redirection.
+        const studentBtn = document.getElementById('student-btn');
+        const facultyBtn = document.getElementById('faculty-btn');
+        const loginForm = document.getElementById('login-form');
+
+        function renderForm(role) {
+            loginForm.innerHTML = '';
+            
+            let idLabel = role === 'student' ? 'Student ID (Roll No.)' : 'Faculty ID';
+            let portalFile = role === 'student' ? 'student_portal.html' : 'faculty_portal.html'; 
+
+            const formHTML = `
+                <div class="mb-4">
+                    <label for="${role}-id" class="block text-sm font-medium text-gray-700">${idLabel}</label>
+                    <input type="text" id="${role}-id" name="id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required placeholder="e.g., BCC351001">
+                </div>
+                <div class="mb-6">
+                    <label for="${role}-password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="${role}-password" name="password" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" required>
+                </div>
+                <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150">
+                    Log In as ${role.charAt(0).toUpperCase() + role.slice(1)}
+                </button>
+            `;
+            loginForm.innerHTML = formHTML;
+
+            loginForm.onsubmit = function(event) {
+                event.preventDefault();
+                window.location.href = portalFile;
+            };
+        }
+
+        function updateButtons(activeRole) {
+            const activeClasses = ['bg-indigo-600', 'text-white'];
+            const inactiveClasses = ['bg-gray-100', 'text-gray-700', 'hover:bg-gray-200'];
+
+            if (activeRole === 'student') {
+                studentBtn.classList.add(...activeClasses);
+                studentBtn.classList.remove(...inactiveClasses);
+                facultyBtn.classList.remove(...activeClasses);
+                facultyBtn.classList.add(...inactiveClasses);
+            } else {
+                facultyBtn.classList.add(...activeClasses);
+                facultyBtn.classList.remove(...inactiveClasses);
+                studentBtn.classList.remove(...activeClasses);
+                studentBtn.classList.add(...inactiveClasses);
+            }
+        }
+
+        // Event Listeners
+        studentBtn.addEventListener('click', () => {
+            updateButtons('student');
+            renderForm('student');
+        });
+
+        facultyBtn.addEventListener('click', () => {
+            updateButtons('faculty');
+            renderForm('faculty');
+        });
+
+        // Initial state load
+        document.addEventListener('DOMContentLoaded', () => {
+            updateButtons('student');
+            renderForm('student');
+        });
+    </script>
+</body>
+</html>
